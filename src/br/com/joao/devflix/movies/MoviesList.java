@@ -7,6 +7,9 @@ import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.util.List;
 import java.util.Map;
+import java.io.InputStream;
+import java.net.URL;
+import br.com.joao.devflix.sticker.StickerGenerator;
 
 public class MoviesList extends Exception {
     public static void main(String[] args) throws Exception {
@@ -22,6 +25,14 @@ public class MoviesList extends Exception {
         List<Map<String, String>> moviesList = parser.parse(body);
     // exibir e manipular dados
     for(Map<String, String> movies : moviesList){
+        String urlImagem = movies.get("image");
+        String title = movies.get("title");
+
+        InputStream inputStream = new URL(urlImagem).openStream();
+        String nomeArquivo = title.replace(":", "-")  + ".png";
+
+        var generator = new StickerGenerator();
+        generator.cria(inputStream,nomeArquivo);
         System.out.print("\u001b[1mFilme: ");
         System.out.println(movies.get("title"));
         System.out.print("Capa: ");
